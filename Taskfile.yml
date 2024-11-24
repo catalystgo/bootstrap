@@ -4,10 +4,7 @@ vars:
   GOBIN: $(pwd)/bin
 
 tasks:
-  run: 
-    desc: "Run the application"
-    cmds:
-      - go run postgres/example/main.go
+     
   mock:
     cmds:
       - "{{.GOBIN}}/mockgen -package=mock -destination=kafka/mock/sync.go -source=kafka/sync.go"
@@ -24,7 +21,6 @@ tasks:
   test:
     cmds:
       - go test -v -race -cover ./...
-
 
   lint:
     cmds:
@@ -47,7 +43,16 @@ tasks:
     - GOBIN={{.GOBIN}} go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
     - GOBIN={{.GOBIN}} go install github.com/golang/mock/mockgen@v1.6.0
 
-## INTERNAL COMMANDS
+## Docker 
+
+  docker-up:
+    cmds:
+      - docker compose -f docker/docker-compose.yml up
+  docker-down:
+    cmds:
+      - docker compose -f docker/docker-compose.yml down
+
+## Internal
 
   go_files:
     desc: "Return all .go files and run .COMMAND on them"

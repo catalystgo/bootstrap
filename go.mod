@@ -1,10 +1,10 @@
 module github.com/catalystgo/bootstrap
 
-go 1.22.0
+go 1.23
 
 require (
 	github.com/IBM/sarama v1.43.2
-	github.com/catalystgo/logger v0.0.2
+	github.com/catalystgo/logger v0.1.0
 	github.com/containerd/containerd v1.7.15
 	github.com/golang/mock v1.6.0
 	github.com/jackc/pgx/v5 v5.6.0
