@@ -1,4 +1,4 @@
-module github.com/escalopa/bootstrap/redis
+module github.com/catalystgo/bootstrap/redis
 
 go 1.24
 

@@ -1,9 +1,8 @@
-module github.com/escalopa/bootstrap/postgres
+module github.com/catalystgo/bootstrap/postgres
 
 go 1.24
 
 require (
-	github.com/catalystgo/bootstrap v0.0.1
 	github.com/catalystgo/logger v0.1.2
 	github.com/jackc/pgx/v5 v5.7.2
 )
