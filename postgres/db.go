@@ -49,7 +49,7 @@ func (db *db) Begin(ctx context.Context, f func(tx pgx.Tx) error) error {
 	defer func() {
 		err := tx.Rollback(ctx)
 		if err != nil {
-			logger.Errorf(ctx, "rollback tx", err)
+			logger.Errorf(ctx, "rollback tx: %v", err)
 		}
 	}()
 

@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	errNoNodes      = errors.New("no nodes available")
-	errNodeNotFound = errors.New("node not found")
+	ErrNoNodes      = errors.New("no nodes available")
+	ErrNodeNotFound = errors.New("node not found")
 )
 
 type ShardedClient interface {
@@ -30,7 +30,6 @@ type shardedClient struct {
 	nodesMutex sync.RWMutex
 }
 
-// NewClient creates a new ShardedClient with given shard addresses
 func NewShardedClient(ctx context.Context, shardAddresses []string) (ShardedClient, error) {
 	client := &shardedClient{
 		nodesMap: make(map[string]*redis.Client),
@@ -73,14 +72,13 @@ func (rsc *shardedClient) RemoveNode(ctx context.Context, address string) {
 	rsc.nodesMutex.Lock()
 	defer rsc.nodesMutex.Unlock()
 
-	for node, client := range rsc.nodesMap {
-		if node == address {
-			if err := client.Close(); err != nil {
-				logger.Errorf(ctx, "error closing client: %s => %v", address, err)
-			}
-			delete(rsc.nodesMap, node)
-			break
-		}
+	client := rsc.nodesMap[address]
+	if client == nil {
+		return
+	}
+
+	if err := client.Close(); err != nil {
+		logger.Errorf(ctx, "error closing client: %v", err)
 	}
 
 	rsc.hashRing.RemoveNode(address)
@@ -93,12 +91,12 @@ func (rsc *shardedClient) GetShard(key string) (*redis.Client, error) {
 
 	node, ok := rsc.hashRing.GetNode(key)
 	if !ok {
-		return nil, errNoNodes
+		return nil, ErrNoNodes
 	}
 
 	client, ok := rsc.nodesMap[node]
 	if !ok {
-		return nil, errNodeNotFound
+		return nil, ErrNodeNotFound
 	}
 
 	return client, nil

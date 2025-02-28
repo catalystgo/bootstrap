@@ -20,7 +20,24 @@ tasks:
 
   test:
     cmds:
-      - go test -v -race -cover ./...
+      - task: test-kafka
+      - task: test-redis
+      - task: test-postgres
+
+  test-kafka:
+    cmds:
+      - task: test-directory
+        vars: { DIR: kafka }
+
+  test-redis:
+    cmds:
+      - task: test-directory
+        vars: { DIR: redis }
+
+  test-postgres:
+    cmds:
+      - task: test-directory
+        vars: { DIR: postgres }
 
   lint:
     cmds:
@@ -30,8 +47,7 @@ tasks:
         -exclude ./**/mock
         ./..."
 
-  precommit:
-    desc: "Run all precommit checks"
+  commit:
     cmds:
       - task: format
       - task: lint
@@ -40,10 +56,10 @@ tasks:
   deps:
     - GOBIN={{.GOBIN}} go install golang.org/x/tools/cmd/goimports@v0.19.0
     - GOBIN={{.GOBIN}} go install github.com/mgechev/revive@v1.3.7
-    - GOBIN={{.GOBIN}} go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
     - GOBIN={{.GOBIN}} go install github.com/golang/mock/mockgen@v1.6.0
+    - GOBIN={{.GOBIN}} go install github.com/mfridman/tparse@v0.17.0
 
-## Docker 
+  ## docker
 
   docker-up:
     cmds:
@@ -52,7 +68,7 @@ tasks:
     cmds:
       - docker compose -f docker/docker-compose.yml down
 
-## Internal
+  ## internal
 
   go_files:
     desc: "Return all .go files and run .COMMAND on them"
@@ -62,3 +78,10 @@ tasks:
         -name "*.go"
         -not -path ./mock
         -exec {{.COMMAND}};
+
+  test-directory:
+    dir: "{{.DIR}}"
+    internal: true
+    cmds:
+      - go test -v -race -cover -json -coverprofile=coverage.out ./... > coverage.json && cd .. && {{.GOBIN}}/tparse -all -file={{.DIR}}/coverage.json
+      - defer: rm coverage.json
