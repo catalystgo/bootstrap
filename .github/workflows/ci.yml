@@ -1,0 +1,52 @@
+name: ci_pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout_code
+        uses: actions/checkout@v2
+
+      - name: setup_go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.23
+
+      - name: install_dependencies
+        run: |
+          go install github.com/go-task/task/v3/cmd/task@latest
+          task deps
+        shell: bash
+
+
+      - name: run_linter
+        run: task lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout_code
+        uses: actions/checkout@v2
+
+      - name: setup_go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.24
+
+      - name: install_dependencies
+        run: |
+          go install github.com/go-task/task/v3/cmd/task@latest
+          task deps
+        shell: bash
+
+
+      - name: run_tests
+        run: task test
