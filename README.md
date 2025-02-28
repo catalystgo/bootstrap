@@ -1,12 +1,46 @@
 # bootstrap 💨
 
-💨 A bootstrap library to initialize external service's clients without boilerplate.💨
+💨 A bootstrap library to initialize external service's clients without boilerplate 💨
 
-## Documentation 📚
+Supported clients:
 
-TBD
+- Kafka
+- Postgres
+- Redis
 
-## UI 😎
+---
+
+### Kafka 
+
+```bash
+go get github.com/catalystgo/bootstrap/kafka
+```
+
+example: **[code](./kafka/example)**
+
+---
+
+### Postgres 🚀
+
+```bash
+go get github.com/catalystgo/bootstrap/postgres
+```
+
+example: **[code](./postgres/example)**
+
+---
+
+### redis 🚀
+
+```bash
+go get github.com/catalystgo/bootstrap/redis
+```
+
+example: **[code](./redis/example)**
+
+---
+
+### UI 😎
 
 To see the UI, run the following command:
 
@@ -21,6 +55,5 @@ docker compose up
 
 ## Milestones 🚀
 
-- [ ] Add memcached client support
-- [ ] Add pgbouncer client support
-- [ ] Find another S3 client that is compatiable with aws-sdk-go-v2 library
+- [ ] add memcached client support
+- [ ] add pgbouncer client support
