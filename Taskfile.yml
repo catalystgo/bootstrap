@@ -23,6 +23,7 @@ tasks:
     cmds:
       - task: test-kafka
       - task: test-redis
+      - task: test-cache
       - task: test-postgres
 
   test-kafka:
@@ -39,6 +40,11 @@ tasks:
     cmds:
       - task: test-directory
         vars: { DIR: postgres }
+
+  test-cache:
+    cmds:
+      - task: test-directory
+        vars: { DIR: cache }
 
   lint:
     cmds:
