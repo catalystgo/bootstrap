@@ -15,23 +15,15 @@ var (
 	ErrNodeNotFound = errors.New("node not found")
 )
 
-type ShardedClient interface {
-	AddNode(ctx context.Context, address string) error
-	RemoveNode(ctx context.Context, address string)
-	GetShard(key string) (*redis.Client, error)
-	Nodes() []string
-	Close()
-}
-
-// shardedClient is a Redis client wrapper supporting sharding with consistent hashing
-type shardedClient struct {
+// ShardedClient is a Redis client wrapper supporting sharding with consistent hashing
+type ShardedClient struct {
 	hashRing   *hashring.HashRing
 	nodesMap   map[string]*redis.Client
 	nodesMutex sync.RWMutex
 }
 
-func NewShardedClient(ctx context.Context, shardAddresses []string) (ShardedClient, error) {
-	client := &shardedClient{
+func NewShardedClient(ctx context.Context, shardAddresses []string) (*ShardedClient, error) {
+	client := &ShardedClient{
 		nodesMap: make(map[string]*redis.Client),
 		hashRing: hashring.New(nil),
 	}
@@ -46,7 +38,7 @@ func NewShardedClient(ctx context.Context, shardAddresses []string) (ShardedClie
 }
 
 // AddNode adds a new node to the client
-func (rsc *shardedClient) AddNode(ctx context.Context, address string) error {
+func (rsc *ShardedClient) AddNode(ctx context.Context, address string) error {
 	opt, err := redis.ParseURL(address)
 	if err != nil {
 		return err
@@ -68,7 +60,7 @@ func (rsc *shardedClient) AddNode(ctx context.Context, address string) error {
 
 // RemoveNode removes a node from the client
 // Notice that address must be in the form of "host:port"
-func (rsc *shardedClient) RemoveNode(ctx context.Context, address string) {
+func (rsc *ShardedClient) RemoveNode(ctx context.Context, address string) {
 	rsc.nodesMutex.Lock()
 	defer rsc.nodesMutex.Unlock()
 
@@ -85,7 +77,7 @@ func (rsc *shardedClient) RemoveNode(ctx context.Context, address string) {
 }
 
 // GetShard returns the shard responsible for a given key
-func (rsc *shardedClient) GetShard(key string) (*redis.Client, error) {
+func (rsc *ShardedClient) GetShard(key string) (*redis.Client, error) {
 	rsc.nodesMutex.RLock()
 	defer rsc.nodesMutex.RUnlock()
 
@@ -102,7 +94,7 @@ func (rsc *shardedClient) GetShard(key string) (*redis.Client, error) {
 	return client, nil
 }
 
-func (rsc *shardedClient) Nodes() []string {
+func (rsc *ShardedClient) Nodes() []string {
 	rsc.nodesMutex.RLock()
 	defer rsc.nodesMutex.RUnlock()
 
@@ -114,7 +106,7 @@ func (rsc *shardedClient) Nodes() []string {
 	return nodes
 }
 
-func (rsc *shardedClient) Close() {
+func (rsc *ShardedClient) Close() {
 	rsc.nodesMutex.Lock()
 	defer rsc.nodesMutex.Unlock()
 
