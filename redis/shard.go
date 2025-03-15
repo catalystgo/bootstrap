@@ -15,7 +15,6 @@ var (
 	ErrNodeNotFound = errors.New("node not found")
 )
 
-// ShardedClient is a Redis client wrapper supporting sharding with consistent hashing
 type ShardedClient struct {
 	hashRing   *hashring.HashRing
 	nodesMap   map[string]*redis.Client
@@ -37,7 +36,6 @@ func NewShardedClient(ctx context.Context, shardAddresses []string) (*ShardedCli
 	return client, nil
 }
 
-// AddNode adds a new node to the client
 func (rsc *ShardedClient) AddNode(ctx context.Context, address string) error {
 	opt, err := redis.ParseURL(address)
 	if err != nil {
@@ -58,8 +56,6 @@ func (rsc *ShardedClient) AddNode(ctx context.Context, address string) error {
 	return nil
 }
 
-// RemoveNode removes a node from the client
-// Notice that address must be in the form of "host:port"
 func (rsc *ShardedClient) RemoveNode(ctx context.Context, address string) {
 	rsc.nodesMutex.Lock()
 	defer rsc.nodesMutex.Unlock()
@@ -76,7 +72,6 @@ func (rsc *ShardedClient) RemoveNode(ctx context.Context, address string) {
 	rsc.hashRing.RemoveNode(address)
 }
 
-// GetShard returns the shard responsible for a given key
 func (rsc *ShardedClient) GetShard(key string) (*redis.Client, error) {
 	rsc.nodesMutex.RLock()
 	defer rsc.nodesMutex.RUnlock()
