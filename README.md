@@ -10,7 +10,7 @@ Supported clients:
 
 ---
 
-### Kafka 
+### Kafka 🚀
 
 ```bash
 go get github.com/catalystgo/bootstrap/kafka
@@ -30,13 +30,23 @@ example: **[code](./postgres/example)**
 
 ---
 
-### redis 🚀
+### Redis 🚀
 
 ```bash
 go get github.com/catalystgo/bootstrap/redis
 ```
 
 example: **[code](./redis/example)**
+
+---
+
+### Cache 🚀
+
+```bash
+go get github.com/catalystgo/bootstrap/cache
+```
+
+example: **[code](./cache/example)**
 
 ---
 

@@ -7,6 +7,7 @@ tasks:
      
   mock:
     cmds:
+      # kafka
       - "{{.GOBIN}}/mockgen -package=mock -destination=kafka/mock/sync.go -source=kafka/sync.go"
       - "{{.GOBIN}}/mockgen -package=mock -destination=kafka/mock/async.go -source=kafka/async.go"
       - "{{.GOBIN}}/mockgen -package=mock -destination=kafka/mock/consumer_group.go -source=kafka/consumer_group.go"
