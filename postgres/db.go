@@ -2,8 +2,6 @@ package postgres
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/catalystgo/logger/logger"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -53,15 +51,11 @@ func (db *db) Begin(ctx context.Context, f func(tx pgx.Tx) error) error {
 		}
 	}()
 
-	if err := f(tx); err != nil {
-		return fmt.Errorf("exec tx: %v", err)
+	if err = f(tx); err != nil {
+		return err
 	}
 
-	if err := tx.Commit(ctx); err != nil {
-		return fmt.Errorf("commit tx: %v", err)
-	}
-
-	return nil
+	return tx.Commit(ctx)
 }
 
 func (db *db) Close() error {

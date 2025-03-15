@@ -26,7 +26,7 @@ func main() {
 		panic(err)
 	}
 
-	defer db.Close()
+	defer func(db postgres.DB) { _ = db.Close() }(db)
 
 	println("Connected to Postgres ✅")
 }
