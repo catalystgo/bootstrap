@@ -26,7 +26,6 @@ jobs:
           task deps
         shell: bash
 
-
       - name: run_linter
         run: task lint
 
@@ -46,7 +45,6 @@ jobs:
           go install github.com/go-task/task/v3/cmd/task@latest
           task deps
         shell: bash
-
 
       - name: run_tests
         run: task test

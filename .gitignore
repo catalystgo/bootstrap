@@ -26,3 +26,4 @@ data
 .idea
 .vscode
 vendor
+coverage.txt

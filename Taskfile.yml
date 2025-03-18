@@ -64,7 +64,7 @@ tasks:
     - GOBIN={{.GOBIN}} go install golang.org/x/tools/cmd/goimports@v0.19.0
     - GOBIN={{.GOBIN}} go install github.com/mgechev/revive@v1.3.7
     - GOBIN={{.GOBIN}} go install github.com/golang/mock/mockgen@v1.6.0
-    - GOBIN={{.GOBIN}} go install github.com/mfridman/tparse@v0.17.0
+    - GOBIN={{.GOBIN}} go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
 
   ## docker
 
@@ -90,5 +90,5 @@ tasks:
     dir: "{{.DIR}}"
     internal: true
     cmds:
-      - go test -v -race -cover -json -coverprofile=coverage.out ./... > coverage.json && cd .. && {{.GOBIN}}/tparse -all -file={{.DIR}}/coverage.json
+      - go test -v -race -cover -json -coverprofile=coverage.txt ./... > coverage.json && cd .. && {{.GOBIN}}/gotestfmt -input={{.DIR}}/coverage.json
       - defer: rm coverage.json
